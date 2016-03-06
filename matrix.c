@@ -135,7 +135,22 @@ void scalar_mult(double x, struct matrix *m) {
 /* 	a*b -> b */
 /* *\/ */
 void matrix_mult(struct matrix *a, struct matrix *b) {
-		
+	int arows;
+	int acols;
+
+	int brows;
+	int bcols;
+	// 1 2    3 3 3   3+12+21 6+15+24   36 45  
+	// 4 5  * 3 3 3 = 3+12+21 6+15+24 = 36 45
+	// 7 8    
+	struct matrix *result = new_matrix(a->rows,b->cols);
+
+	for (arows = 0; arows < a -> rows; arows++) {
+		for (acols = 0; acols < a->cols; acols++) {
+			}
+		}
+  }
+
 }
 
 
@@ -185,20 +200,20 @@ void matrix_mult(struct matrix *a, struct matrix *b) {
 /* struct matrix * make_rotX(double theta) { */
 /* } */
 
-/* /\*======== struct matrix * make_rotY() ========== */
-/* 	Inputs:  double theta */
+		/* /\*======== struct matrix * make_rotY() ========== */
+		/* 	Inputs:  double theta */
 
-/* 	Returns: The rotation matrix created using theta as the  */
-/* 	angle of rotation and Y as the axis of rotation. */
-/* 	====================*\/ */
-/* struct matrix * make_rotY(double theta) { */
-/* } */
+		/* 	Returns: The rotation matrix created using theta as the  */
+		/* 	angle of rotation and Y as the axis of rotation. */
+		/* 	====================*\/ */
+		/* struct matrix * make_rotY(double theta) { */
+		/* } */
 
-/* /\*======== struct matrix * make_rotZ() ========== */
-/* 	Inputs:  double theta */
+		/* /\*======== struct matrix * make_rotZ() ========== */
+		/* 	Inputs:  double theta */
 
-/* 	Returns: The rotation matrix created using theta as the  */
-/* 	angle of rotation and Z as the axis of rotation. */
-/* 	====================*\/ */
-/* struct matrix * make_rotZ(double theta) { */
-/* } */
+		/* 	Returns: The rotation matrix created using theta as the  */
+		/* 	angle of rotation and Z as the axis of rotation. */
+		/* 	====================*\/ */
+		/* struct matrix * make_rotZ(double theta) { */
+		/* } */
