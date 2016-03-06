@@ -12,6 +12,7 @@ int main() {
   screen s;
   struct matrix *test;
 	test = new_matrix(4, 4);
+	ident(test);
 	scalar_mult(5,test);
 
 
