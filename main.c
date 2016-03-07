@@ -31,6 +31,7 @@ int main() {
   draw_lines(edges, s, c);
   
   int i;
+
   for(i=0; i<50; i++){
     scalar_mult(0.75, edges);
     draw_lines(edges,s,c);
