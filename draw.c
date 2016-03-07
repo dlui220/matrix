@@ -16,134 +16,151 @@ adds point (x, y, z) to points and increment points.lastcol
 if points is full, should call grow on points
 ====================*/
 void add_point( struct matrix * points, int x, int y, int z) {
+  points->m[0][points->cols-1]=x;
+  points->m[1][points->cols-1]=y;
+  points->m[2][points->cols-1]=z;
+  points->m[3][points->cols-1]=1;
+  grow_matrix(points,points->cols+1);
 }
 
 /*======== void add_edge() ==========
-Inputs:   struct matrix * points
-          int x0, int y0, int z0, int x1, int y1, int z1
-Returns: 
-add the line connecting (x0, y0, z0) to (x1, y1, z1) to points
-should use add_point
-====================*/
+	Inputs:   struct matrix * points
+	int x0, int y0, int z0, int x1, int y1, int z1
+	Returns: 
+	add the line connecting (x0, y0, z0) to (x1, y1, z1) to points
+	should use add_point
+	====================*/
 void add_edge( struct matrix * points, 
-	       int x0, int y0, int z0, 
-	       int x1, int y1, int z1) {
+							 int x0, int y0, int z0, 
+							 int x1, int y1, int z1) {
+	add_point(points,x0,y0,z0);
+	add_point(points,x1,y1,z1);
 }
 
 /*======== void draw_lines() ==========
-Inputs:   struct matrix * points
-         screen s
-         color c 
-Returns: 
-Go through points 2 at a time and call draw_line to add that line
-to the screen
-====================*/
+	Inputs:   struct matrix * points
+	screen s
+	color c 
+	Returns: 
+	Go through points 2 at a time and call draw_line to add that line
+	to the screen
+	====================*/
 void draw_lines( struct matrix * points, screen s, color c) {
+	int i;
+  for (i=0; i < points->cols; i+=2) {
+    /* int x1 = points->m[0][i]; */
+    /* int y1 = points->m[1][i]; */
+    /* int x2 = points->m[0][i+1]; */
+    /* int y2 = points->m[1][i+1]; */
+    draw_line( points->m[0][i], points->m[1][i], 
+							 points->m[0][i+1], points->m[1][i+1], 
+							 s, c );
+  }
 }
 
 
 void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
  
-  int x, y, d, dx, dy;
+	int x, y, d, dx, dy;
 
-  x = x0;
-  y = y0;
+	x = x0;
+	y = y0;
   
-  //swap points so we're always draing left to right
-  if ( x0 > x1 ) {
-    x = x1;
-    y = y1;
-    x1 = x0;
-    y1 = y0;
-  }
+	//swap points so we're always drawing left to right
+	if ( x0 > x1 ) {
+		x = x1;
+		y = y1;
+		x1 = x0;
+		y1 = y0;
+	}
 
-  //need to know dx and dy for this version
-  dx = (x1 - x) * 2;
-  dy = (y1 - y) * 2;
+	//need to know dx and dy for this version
+	dx = (x1 - x) * 2;
+	dy = (y1 - y) * 2;
 
-  //positive slope: Octants 1, 2 (5 and 6)
-  if ( dy > 0 ) {
+	//positive slope: Octants 1, 2 (5 and 6)
+	if ( dy > 0 ) {
 
-    //slope < 1: Octant 1 (5)
-    if ( dx > dy ) {
-      d = dy - ( dx / 2 );
+		//slope < 1: Octant 1 (5)
+		if ( dx > dy ) {
+			d = dy - ( dx / 2 );
   
-      while ( x <= x1 ) {
-	plot(s, c, x, y);
+			while ( x <= x1 ) {
+				plot(s, c, x, y);
 
-	if ( d < 0 ) {
-	  x = x + 1;
-	  d = d + dy;
+				if ( d < 0 ) {
+					x = x + 1;
+					d = d + dy;
+				}
+				else {
+					x = x + 1;
+					y = y + 1;
+					d = d + dy - dx;
+				}
+			}
+		}
+
+		//slope > 1: Octant 2 (6)
+		else {
+			d = ( dy / 2 ) - dx;
+			while ( y <= y1 ) {
+
+				plot(s, c, x, y );
+				if ( d > 0 ) {
+					y = y + 1;
+					d = d - dx;
+				}
+				else {
+					y = y + 1;
+					x = x + 1;
+					d = d + dy - dx;
+				}
+			}
+		}
 	}
-	else {
-	  x = x + 1;
-	  y = y + 1;
-	  d = d + dy - dx;
-	}
-      }
-    }
 
-    //slope > 1: Octant 2 (6)
-    else {
-      d = ( dy / 2 ) - dx;
-      while ( y <= y1 ) {
+	//negative slope: Octants 7, 8 (3 and 4)
+	else { 
 
-	plot(s, c, x, y );
-	if ( d > 0 ) {
-	  y = y + 1;
-	  d = d - dx;
-	}
-	else {
-	  y = y + 1;
-	  x = x + 1;
-	  d = d + dy - dx;
-	}
-      }
-    }
-  }
+		//slope > -1: Octant 8 (4)
+		if ( dx > abs(dy) ) {
 
-  //negative slope: Octants 7, 8 (3 and 4)
-  else { 
-
-    //slope > -1: Octant 8 (4)
-    if ( dx > abs(dy) ) {
-
-      d = dy + ( dx / 2 );
+			d = dy + ( dx / 2 );
   
-      while ( x <= x1 ) {
+			while ( x <= x1 ) {
 
-	plot(s, c, x, y);
+				plot(s, c, x, y);
 
-	if ( d > 0 ) {
-	  x = x + 1;
-	  d = d + dy;
-	}
-	else {
-	  x = x + 1;
-	  y = y - 1;
-	  d = d + dy + dx;
-	}
-      }
-    }
+				if ( d > 0 ) {
+					x = x + 1;
+					d = d + dy;
+				}
+				else {
+					x = x + 1;
+					y = y - 1;
+					d = d + dy + dx;
+				}
+			}
+		}
 
-    //slope < -1: Octant 7 (3)
-    else {
+		//slope < -1: Octant 7 (3)
+		else {
 
-      d =  (dy / 2) + dx;
+			d =  (dy / 2) + dx;
 
-      while ( y >= y1 ) {
+			while ( y >= y1 ) {
 	
-	plot(s, c, x, y );
-	if ( d < 0 ) {
-	  y = y - 1;
-	  d = d + dx;
+				plot(s, c, x, y );
+				if ( d < 0 ) {
+					y = y - 1;
+					d = d + dx;
+				}
+				else {
+					y = y - 1;
+					x = x + 1;
+					d = d + dy + dx;
+				}
+			}
+		}
 	}
-	else {
-	  y = y - 1;
-	  x = x + 1;
-	  d = d + dy + dx;
-	}
-      }
-    }
-  }
 }
