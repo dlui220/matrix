@@ -33,7 +33,7 @@ int main() {
   int i;
 
   for(i=0; i<50; i++){
-    scalar_mult(0.75, edges);
+    scalar_mult(0.85, edges);
     draw_lines(edges,s,c);
 		scalar_mult(1.55,edges);
 		draw_lines(edges,s,c);
